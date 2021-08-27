@@ -10,10 +10,10 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <Draw />
         <p>Let's classify digits.</p>
+        <br />
+        {"   "}
+        <br />
       </header>
-      <br />
-      <br />
-      <br />
     </div>
   );
 }
