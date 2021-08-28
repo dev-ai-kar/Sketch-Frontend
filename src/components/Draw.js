@@ -1,7 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { SketchField, Tools } from "react-sketch";
 import { Button } from "react-bootstrap";
 import { saveAs } from "file-saver";
+import axios from "axios";
 
 const styles = {
   draw: {
@@ -10,24 +11,38 @@ const styles = {
 };
 
 function Draw() {
+  const [send, setSend] = useState(false);
   const sketch = useRef();
 
   const handleSubmit = () => {
     const canvas = sketch.current.toDataURL();
-    var image = new Image();
-    image.src = canvas;
-    document.body.appendChild(image);
-    // saveAs(canvas, image.jpg);
+    sentData(canvas);
+    // var image = new Image();
+    // image.src = canvas;
+    // document.body.appendChild(image);
   };
 
   const handleReset = () => {
     console.log(sketch.current);
     sketch.current.clear();
-    sketch.current._backgroundColor = "black";
+    sketch.current._backgroundColor("black");
   };
 
   const sentData = (c) => {
     console.log(c);
+    const headers = {
+      // prettier-ignore
+      'accept': 'application/json',
+    };
+    const fd = new FormData();
+    fd.append("image", c);
+    axios
+      .post("http://127.0.0.1:8000/api/digits/", fd, headers)
+      .then((res) => {
+        console.log(res.data);
+        setSend(true);
+      })
+      .catch((err) => console.log(err));
   };
 
   const getImageResult = (id) => {};
@@ -48,7 +63,7 @@ function Draw() {
       ></SketchField>
       <div className="mt-3">
         <Button onClick={handleSubmit} variant="primary">
-          Save
+          Send
         </Button>
         {"   "}
         <Button onClick={handleReset} variant="secondary">
