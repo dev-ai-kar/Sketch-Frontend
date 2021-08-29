@@ -13,6 +13,7 @@ const styles = {
 
 function Draw() {
   const [send, setSend] = useState(false);
+  const [result, setResult] = useState();
   const sketch = useRef();
 
   const handleSubmit = () => {
@@ -27,6 +28,8 @@ function Draw() {
     console.log(sketch.current);
     sketch.current.clear();
     sketch.current._backgroundColor("black");
+    setSend(false);
+    setResult();
   };
 
   const sentData = (c) => {
@@ -42,18 +45,27 @@ function Draw() {
       .then((res) => {
         console.log(res.data);
         setSend(true);
+        getImageResult(res.data.id);
       })
       .catch((err) => console.log(err));
   };
 
-  const getImageResult = (id) => {};
+  const getImageResult = (id) => {
+    axios
+      .post(`http://127.0.0.1:8000/api/digits/${id}`)
+      .then((res) => {
+        setResult(res.data.result);
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
       {send && (
-        <Alert variant="info">Successfully sent for Classification</Alert>
+        <Alert variant="info">Successfully saved for Classification</Alert>
       )}
-      <h1> Draw Field</h1>
+      <h2> Draw Field</h2>
+      {result && <h3>Result is {result}</h3>}
       <SketchField
         ref={sketch}
         width="800px"
