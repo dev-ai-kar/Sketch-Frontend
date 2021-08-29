@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
 import { SketchField, Tools } from "react-sketch";
 import { Button } from "react-bootstrap";
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 import axios from "axios";
+import Alert from "react-bootstrap/Alert";
 
 const styles = {
   draw: {
@@ -49,11 +50,14 @@ function Draw() {
 
   return (
     <>
+      {send && (
+        <Alert variant="info">Successfully sent for Classification</Alert>
+      )}
       <h1> Draw Field</h1>
       <SketchField
         ref={sketch}
         width="800px"
-        height="500px" //800px
+        height="800px"
         style={styles.draw}
         tool={Tools.Pencil}
         backgroundColor="black"
